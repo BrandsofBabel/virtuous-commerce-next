@@ -2061,13 +2061,89 @@
    laptop. Pull the text block toward the center; whitespace now frames the
    composition on the outside instead of pooling in the middle. */
 
-.v6d .left {
-  padding-left: clamp(10rem, 15vw, 19rem);
-  padding-right: clamp(1.2rem, 1.8vw, 2rem);
+@media (min-width: 56.01rem) {
+  /* Text inset scales with viewport but is capped by calc(18vw - 1rem) so the
+     sentence column always keeps room for its longest word (font is 3.7vw, so
+     word width is a fixed fraction of vw) — text can never slide under the
+     laptop at any window size. */
+  .v6d .left {
+    /* Ceiling keeps the sentence's measure ≥ ~8em of its own font so the
+       longest line always fits the 42% column: font is 3.7vw below the
+       ~1800px cap (ceiling 12.4vw − 2rem) and 4.2rem above it (ceiling
+       42vw − 36rem) — max() picks whichever band applies. */
+    padding-left: min(
+      clamp(14rem, 20.5vw, 25.5rem),
+      max(calc(12.4vw - 2rem), calc(42vw - 36rem))
+    );
+    padding-right: clamp(1.2rem, 1.8vw, 2rem);
+  }
+
+  /* last-resort guard: if a future longer word appears, hyphenate over overlap */
+  .v6d .frame h2 {
+    hyphens: auto;
+  }
+
+  /* Type must scale with the column: the old 2.5rem floor stopped the font
+     shrinking below ~1080px viewport while the 42% column kept narrowing —
+     that is exactly the "text slides under the laptop" bug. In the
+     two-column range the size is purely viewport-proportional. */
+  .v6d .statements {
+    font-size: min(3.7vw, 4.2rem);
+  }
+
+  /* Frame symmetry: the laptop is min(60rem, 56vw) centered in the 58% column,
+     so its right buffer is (58vw − min(60rem,56vw))/2 = 29vw − 30rem once the
+     60rem cap binds. Give the rail the same left buffer at every width. */
+  .v6d .rail {
+    left: clamp(1.5rem, calc(29vw - 30rem), 18rem);
+  }
 }
 
-@media (max-width: 1100px) and (min-width: 56.01rem) {
+/* Narrow two-column band: not enough room between viewport edge and the
+   sentence for labeled rail items — numbers only. */
+@media (min-width: 56.01rem) and (max-width: 89rem) {
+  .v6d .rail-lbl {
+    display: none;
+  }
+}
+
+/* ============ responsive reassert — mobile must always win ============ */
+/* The late desktop passes above set .pin columns / .laptop width unscoped,
+   which clobbered the stacked layout from the earlier media query (they sit
+   later in the cascade). Everything layout-critical for small screens is
+   re-asserted here, at the end of the file, so no future desktop pass can
+   silently break phones again. Desktop-only rules: scope them min-width. */
+
+.v6d .left,
+.v6d .right {
+  min-width: 0; /* grid items: allow shrink; text may never overflow under the laptop */
+}
+
+@media (max-width: 56rem) {
+  .v6d .pin {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 46%) minmax(0, 54%);
+  }
+
+  .v6d .rail {
+    display: none;
+  }
+
   .v6d .left {
-    padding-left: clamp(7rem, 10vw, 10rem);
+    padding: 3.6rem 1.5rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .v6d .laptop {
+    width: min(88vw, 30rem);
+  }
+
+  .v6d .floor {
+    width: min(92vw, 32rem);
+  }
+
+  /* baseline: the email is the useful bit; the tagline clips on phones */
+  .v6d .baseline span {
+    display: none;
   }
 }
