@@ -2055,3 +2055,19 @@
 .v6d .modal-close {
   margin: 0 auto;
 }
+
+/* ============ horizontal balance pass ============ */
+/* The sentence hugged the viewport edge and left a dead zone before the
+   laptop. Pull the text block toward the center; whitespace now frames the
+   composition on the outside instead of pooling in the middle. */
+
+.v6d .left {
+  padding-left: clamp(10rem, 15vw, 19rem);
+  padding-right: clamp(1.2rem, 1.8vw, 2rem);
+}
+
+@media (max-width: 1100px) and (min-width: 56.01rem) {
+  .v6d .left {
+    padding-left: clamp(7rem, 10vw, 10rem);
+  }
+}
