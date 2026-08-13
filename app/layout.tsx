@@ -18,35 +18,22 @@ const siteUrl = "https://virtuouscommerce.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: {
-    default:
-      "Virtuous Commerce — Grow Amazon profit without agency bloat",
-    template: "%s — Virtuous Commerce",
-  },
+  title: "Virtuous Commerce — an Amazon agency",
   description:
-    "The next-gen operating system for brands on Amazon. Virtuous Commerce increases sales, protects margin, and reduces management drag by operating advertising, catalog, content, inventory, marketplace intelligence, and P&L as one connected system.",
-  keywords: [
-    "Amazon operating system",
-    "Amazon profit",
-    "Amazon agency alternative",
-    "contribution margin",
-    "Amazon advertising",
-    "marketplace intelligence",
-    "profit leak audit",
-  ],
+    "We are an Amazon agency: we help customers find your brand, turn more of them into buyers, keep advertising profitable and inventory lean — until Amazon is your most predictable channel.",
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Virtuous Commerce — Grow Amazon profit without agency bloat",
+    title: "Virtuous Commerce — an Amazon agency",
     description:
-      "Operate advertising, catalog, content, inventory, marketplace intelligence, and P&L as one connected system. Request a free Profit Leak Audit.",
+      "Amazon, run properly: discovery, conversion, advertising, inventory, and a weekly channel P&L — until Amazon is your most predictable channel.",
     siteName: "Virtuous Commerce",
   },
   twitter: {
-    card: "summary_large_image",
-    title: "Virtuous Commerce — Grow Amazon profit without agency bloat",
+    card: "summary",
+    title: "Virtuous Commerce — an Amazon agency",
     description:
-      "The next-gen operating system for brands on Amazon. Sales, margin, and execution in one connected model.",
+      "Amazon, run properly — until it's your most predictable channel.",
   },
   robots: { index: true, follow: true },
 };
