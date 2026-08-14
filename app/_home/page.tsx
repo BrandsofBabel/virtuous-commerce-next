@@ -10,7 +10,7 @@
   mid-scroll; consoles (ads/inventory/P&L) on a gray seller ground.
   Black / white / Amazon orange #FF9900 as mark color only.
   NO founder identity. Personal-stat bullet ("10+ years") kept by
-  Devon's explicit call 2026-08-13. Figures illustrative. No Amazon
+  an explicit owner call, 2026-08-13. Figures illustrative. No Amazon
   logos/wordmarks. Copy traces to Strategy/BRANDSCRIPT.md.
 */
 
