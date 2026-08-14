@@ -2134,12 +2134,45 @@
     border-bottom: 1px solid var(--line);
   }
 
+  /* The laptop form factor can't present this content at phone width — a
+     3/2 screen is ~200px tall and the dark Amazon header fills half of it.
+     On phones the device becomes a portrait tablet card: same screens,
+     taller viewport, no keyboard base. Width is also height-capped
+     (44vh) so short phones keep the whole card inside its row. */
   .v6d .laptop {
-    width: min(88vw, 30rem);
+    width: min(92vw, 26rem, 44vh);
   }
 
+  .v6d .lid {
+    border-radius: 1.1rem;
+    padding: 0.55rem;
+  }
+
+  .v6d .lid .browser {
+    aspect-ratio: 3 / 3.7;
+    border-radius: 0.7rem;
+  }
+
+  .v6d .base,
   .v6d .floor {
-    width: min(92vw, 32rem);
+    display: none;
+  }
+
+  /* SERP: two readable columns instead of three slivers */
+  .v6d .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* PDP and weekly-recap emails: single column, charts stack full-width */
+  .v6d .pdp-grid,
+  .v6d .mail-cols {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .v6d .pdp-img {
+    aspect-ratio: 1 / 1;
+    max-height: none;
   }
 
   /* baseline: the email is the useful bit; the tagline clips on phones */
