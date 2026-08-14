@@ -463,175 +463,10 @@ function Panel({
   );
 }
 
-export default function V6Home() {
-  const [stage, setStage] = useState(0);
-  const [booking, setBooking] = useState(false);
-  const [sent, setSent] = useState(false);
-  const stageRef = useRef(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const el = trackRef.current;
-        if (!el) return;
-        const total = el.offsetHeight - window.innerHeight;
-        if (total <= 0) return;
-        const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
-        const s = Math.min(N - 1, Math.floor(p * N));
-        stageRef.current = s;
-        setStage(s);
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
-
-  const jumpTo = (i: number) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY;
-    const total = el.offsetHeight - window.innerHeight;
-    window.scrollTo({
-      top: top + (total * (i + 0.5)) / N,
-      behavior: "smooth",
-    });
-  };
-
-  /* One wheel gesture = one beat. Only intercepts while the show is
-     pinned; releases to native scroll past the last beat (footer) and
-     before the first. Lock absorbs trackpad momentum. */
-  useEffect(() => {
-    const lock = { on: false };
-    const onWheel = (e: WheelEvent) => {
-      const el = trackRef.current;
-      if (!el || e.ctrlKey) return;
-      const r = el.getBoundingClientRect();
-      if (r.top > 1 || r.bottom < window.innerHeight - 1) return;
-      const dir = e.deltaY > 0 ? 1 : e.deltaY < 0 ? -1 : 0;
-      if (!dir) return;
-      const next = stageRef.current + dir;
-      if (next < 0 || next > N - 1) return;
-      e.preventDefault();
-      if (lock.on || Math.abs(e.deltaY) < 8) return;
-      lock.on = true;
-      const top = r.top + window.scrollY;
-      const total = el.offsetHeight - window.innerHeight;
-      window.scrollTo({
-        top: top + (total * (next + 0.5)) / N,
-        behavior: "smooth",
-      });
-      window.setTimeout(() => {
-        lock.on = false;
-      }, 1000);
-    };
-    window.addEventListener("wheel", onWheel, { passive: false });
-    return () => window.removeEventListener("wheel", onWheel);
-  }, []);
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setBooking(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  const submitBooking = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
-    fetch("/api/book", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    }).catch(() => {});
-    setSent(true);
-  };
-
+function BrowserScreen({ stage, groupId }: { stage: number; groupId: string }) {
   const ranked = stage !== 0;
   const order = ranked ? ORDER_RANKED : ORDER_BURIED;
-
   return (
-    <MotionConfig reducedMotion="user">
-      <button className="btn btn-nav" onClick={() => setBooking(true)}>
-        Book a call
-      </button>
-
-      <div
-        className="track"
-        ref={trackRef}
-        style={{ height: `${N * 100 + 12}vh` }}
-      >
-        <div className="pin" data-stage={stage}>
-          {/* ---------- left: the sentence ---------- */}
-          <div className="left">
-            <nav className="rail" aria-label="Sections">
-              {BEATS.map((b, i) => (
-                <button
-                  key={i}
-                  className={`rail-item${i === stage ? " on" : ""}`}
-                  onClick={() => jumpTo(i)}
-                >
-                  <span className="rail-no">{String(i).padStart(2, "0")}</span>
-                  <span className="rail-lbl">{b}</span>
-                </button>
-              ))}
-            </nav>
-
-            <div className="left-main">
-              <h1>Virtuous Commerce</h1>
-              <div className="statements" aria-live="polite">
-                {FRAGMENTS.map((frag, i) => (
-                  <div
-                    key={i}
-                    className={`frame${i === stage ? " active" : ""}`}
-                    aria-hidden={i !== stage}
-                  >
-                    <h2>{frag}</h2>
-                    {BULLETS[i].length > 0 ? (
-                      <ul className="bullets">
-                        {BULLETS[i].map((b, j) => (
-                          <li key={j} style={{ "--i": j } as React.CSSProperties}>
-                            {b}
-                          </li>
-                        ))}
-                      </ul>
-                    ) : null}
-                  </div>
-                ))}
-              </div>
-              <div className={`cta${stage === N - 1 ? " show" : ""}`}>
-                <button
-                  className="btn"
-                  onClick={() => setBooking(true)}
-                  tabIndex={stage === N - 1 ? 0 : -1}
-                >
-                  Book a call <span className="arrow">→</span>
-                </button>
-              </div>
-            </div>
-
-            <div className="baseline">
-              <a href="mailto:hello@virtuouscommerce.com">
-                hello@virtuouscommerce.com
-              </a>
-              <span>Independent Amazon agency</span>
-            </div>
-          </div>
-
-          {/* ---------- right: the Amazon browser ---------- */}
-          <div className="right" aria-hidden="true">
-            <i className="floor" aria-hidden="true" />
-            <div className="laptop">
-              <div className="lid">
                 <div className="browser">
               {/* browser chrome with per-beat URL */}
               <div className="chrome">
@@ -681,7 +516,7 @@ export default function V6Home() {
               ) : null}
 
               <div className="viewport">
-                <LayoutGroup>
+                <LayoutGroup id={groupId}>
                   <AnimatePresence mode="popLayout" initial={false}>
                     {/* scene: search results (stages 0-1) */}
                     {stage <= 1 ? (
@@ -955,10 +790,216 @@ export default function V6Home() {
                 </LayoutGroup>
               </div>
                 </div>
+  );
+}
+
+export default function V6Home() {
+  const [stage, setStage] = useState(0);
+  const [booking, setBooking] = useState(false);
+  const [sent, setSent] = useState(false);
+  const stageRef = useRef(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let raf = 0;
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const el = trackRef.current;
+        if (!el) return;
+        const total = el.offsetHeight - window.innerHeight;
+        if (total <= 0) return;
+        const p = Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total));
+        const s = Math.min(N - 1, Math.floor(p * N));
+        stageRef.current = s;
+        if (!Number.isFinite(s)) return;
+        setStage(s);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const jumpTo = (i: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const total = el.offsetHeight - window.innerHeight;
+    window.scrollTo({
+      top: top + (total * (i + 0.5)) / N,
+      behavior: "smooth",
+    });
+  };
+
+  /* One wheel gesture = one beat. Only intercepts while the show is
+     pinned; releases to native scroll past the last beat (footer) and
+     before the first. Lock absorbs trackpad momentum. */
+  useEffect(() => {
+    const lock = { on: false };
+    const onWheel = (e: WheelEvent) => {
+      const el = trackRef.current;
+      if (!el || e.ctrlKey) return;
+      const r = el.getBoundingClientRect();
+      if (r.top > 1 || r.bottom < window.innerHeight - 1) return;
+      const dir = e.deltaY > 0 ? 1 : e.deltaY < 0 ? -1 : 0;
+      if (!dir) return;
+      const next = stageRef.current + dir;
+      if (next < 0 || next > N - 1) return;
+      e.preventDefault();
+      if (lock.on || Math.abs(e.deltaY) < 8) return;
+      lock.on = true;
+      const top = r.top + window.scrollY;
+      const total = el.offsetHeight - window.innerHeight;
+      window.scrollTo({
+        top: top + (total * (next + 0.5)) / N,
+        behavior: "smooth",
+      });
+      window.setTimeout(() => {
+        lock.on = false;
+      }, 1000);
+    };
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => window.removeEventListener("wheel", onWheel);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setBooking(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const submitBooking = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.currentTarget).entries());
+    fetch("/api/book", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    }).catch(() => {});
+    setSent(true);
+  };
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <button className="btn btn-nav" onClick={() => setBooking(true)}>
+        Book a call
+      </button>
+
+      <div
+        className="track"
+        ref={trackRef}
+        style={{ height: `${N * 100 + 12}vh` }}
+      >
+        <div className="pin" data-stage={stage}>
+          {/* ---------- left: the sentence ---------- */}
+          <div className="left">
+            <nav className="rail" aria-label="Sections">
+              {BEATS.map((b, i) => (
+                <button
+                  key={i}
+                  className={`rail-item${i === stage ? " on" : ""}`}
+                  onClick={() => jumpTo(i)}
+                >
+                  <span className="rail-no">{String(i).padStart(2, "0")}</span>
+                  <span className="rail-lbl">{b}</span>
+                </button>
+              ))}
+            </nav>
+
+            <div className="left-main">
+              <h1>Virtuous Commerce</h1>
+              <div className="statements" aria-live="polite">
+                {FRAGMENTS.map((frag, i) => (
+                  <div
+                    key={i}
+                    className={`frame${i === stage ? " active" : ""}`}
+                    aria-hidden={i !== stage}
+                  >
+                    <h2>{frag}</h2>
+                    {BULLETS[i].length > 0 ? (
+                      <ul className="bullets">
+                        {BULLETS[i].map((b, j) => (
+                          <li key={j} style={{ "--i": j } as React.CSSProperties}>
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+              <div className={`cta${stage === N - 1 ? " show" : ""}`}>
+                <button
+                  className="btn"
+                  onClick={() => setBooking(true)}
+                  tabIndex={stage === N - 1 ? 0 : -1}
+                >
+                  Book a call <span className="arrow">→</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="baseline">
+              <a href="mailto:hello@virtuouscommerce.com">
+                hello@virtuouscommerce.com
+              </a>
+              <span>Independent Amazon agency</span>
+            </div>
+          </div>
+
+          {/* ---------- right: the Amazon browser ---------- */}
+          <div className="right" aria-hidden="true">
+            <i className="floor" aria-hidden="true" />
+            <div className="laptop">
+              <div className="lid">
+                <BrowserScreen stage={stage} groupId="d" />
               </div>
               <div className="deck" />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ---------- mobile: linear flow (hidden on desktop via CSS) ---------- */}
+      <div className="mflow">
+        <header className="m-top">
+          <h1>Virtuous Commerce</h1>
+        </header>
+        {FRAGMENTS.map((frag, i) => (
+          <section className="m-beat" key={i}>
+            <div className="m-eyebrow">
+              <span className="rail-no">{String(i).padStart(2, "0")}</span>
+              <span>{BEATS[i]}</span>
+            </div>
+            <h2 className="m-frag">{frag}</h2>
+            {BULLETS[i].length > 0 ? (
+              <ul className="bullets m-bullets">
+                {BULLETS[i].map((b, j) => (
+                  <li key={j} style={{ "--i": j } as React.CSSProperties}>
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+            <div className="m-card" aria-hidden="true">
+              <div className="lid">
+                <BrowserScreen stage={i} groupId={"m" + i} />
+              </div>
+            </div>
+          </section>
+        ))}
+        <div className="m-cta">
+          <button className="btn" onClick={() => setBooking(true)}>
+            Book a call <span className="arrow">→</span>
+          </button>
         </div>
       </div>
 

@@ -2180,3 +2180,138 @@
     display: none;
   }
 }
+
+/* ============ mobile: linear flow ============ */
+/* Phones don't get the pinned scrollytelling squeezed down — they get a
+   normal scrolling page: each beat is a section (eyebrow, sentence,
+   bullets, device card at its natural height). The .track is desktop's. */
+
+.v6d .mflow {
+  display: none;
+}
+
+@media (max-width: 56rem) {
+  .v6d .track {
+    display: none;
+  }
+
+  .v6d .mflow {
+    display: block;
+    padding: 4.4rem 1.25rem 1rem;
+  }
+
+  .v6d .m-top h1 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .v6d .m-top h1::after {
+    content: "";
+    display: block;
+    width: 2.4rem;
+    height: 3px;
+    background: var(--accent);
+    margin-top: 0.7rem;
+  }
+
+  .v6d .m-beat {
+    margin-top: 3.1rem;
+  }
+
+  .v6d .m-eyebrow {
+    display: flex;
+    gap: 0.55rem;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 0.85rem;
+  }
+
+  .v6d .m-eyebrow .rail-no {
+    color: var(--accent-ink);
+  }
+
+  .v6d .m-frag {
+    font-size: clamp(1.75rem, 7.4vw, 2.4rem);
+    line-height: 1.12;
+    letter-spacing: -0.025em;
+    font-weight: 600;
+    margin: 0 0 0.95rem;
+    text-wrap: balance;
+  }
+
+  .v6d .m-frag em {
+    font-style: normal;
+    padding: 0 0.06em;
+    background: linear-gradient(
+      transparent 58%,
+      var(--accent) 58%,
+      var(--accent) 96%,
+      transparent 96%
+    );
+  }
+
+  .v6d .m-bullets li {
+    opacity: 1;
+    transform: none;
+    font-size: 0.95rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .v6d .m-card {
+    margin-top: 1.35rem;
+  }
+
+  .v6d .m-card .lid {
+    border-radius: 1rem;
+    padding: 0.5rem;
+    box-shadow: 0 22px 44px rgba(0, 0, 0, 0.16);
+  }
+
+  /* natural-height screens: scenes flow instead of filling a fixed frame */
+  .v6d .m-card .browser {
+    aspect-ratio: auto;
+    height: auto;
+    border-radius: 0.6rem;
+    overflow: hidden;
+  }
+
+  .v6d .m-card .viewport {
+    flex: none;
+  }
+
+  .v6d .m-card .scene {
+    position: static;
+  }
+
+  .v6d .m-card .mailv {
+    height: auto;
+  }
+
+  .v6d .m-card .scene-pdp {
+    padding: 1rem;
+  }
+
+  /* the SERP is endless by nature — crop it like a screenshot */
+  .v6d .m-card .scene-serp {
+    max-height: 27rem;
+    overflow: hidden;
+  }
+
+  .v6d .m-cta {
+    margin-top: 2.7rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .v6d .footer {
+    flex-wrap: wrap;
+    row-gap: 0.35rem;
+    justify-content: center;
+    text-align: center;
+    padding: 1.6rem 1.25rem 2.4rem;
+  }
+}
