@@ -2200,13 +2200,13 @@
     padding: 4.4rem 1.25rem 1rem;
   }
 
-  .v6d .m-top h1 {
+  .v6d .m-top .m-brand {
     font-size: 1.15rem;
     font-weight: 700;
     letter-spacing: -0.01em;
   }
 
-  .v6d .m-top h1::after {
+  .v6d .m-top .m-brand::after {
     content: "";
     display: block;
     width: 2.4rem;

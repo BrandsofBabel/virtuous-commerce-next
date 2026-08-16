@@ -18,22 +18,23 @@ const siteUrl = "https://virtuouscommerce.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Virtuous Commerce — an Amazon agency",
+  alternates: { canonical: "/" },
+  title: "Virtuous Commerce | Amazon Agency",
   description:
-    "We are an Amazon agency: we help customers find your brand, turn more of them into buyers, keep advertising profitable and inventory lean — until Amazon is your most predictable channel.",
+    "Virtuous Commerce is an Amazon agency: we get your brand found, turn shoppers into buyers, and keep ads profitable and inventory lean. Amazon, run properly.",
   openGraph: {
     type: "website",
     url: siteUrl,
-    title: "Virtuous Commerce — an Amazon agency",
+    title: "Virtuous Commerce | Amazon Agency",
     description:
-      "Amazon, run properly: discovery, conversion, advertising, inventory, and a weekly channel P&L — until Amazon is your most predictable channel.",
+      "Discovery, conversion, advertising, inventory, and a weekly channel P&L. Amazon, run properly.",
     siteName: "Virtuous Commerce",
   },
   twitter: {
-    card: "summary",
-    title: "Virtuous Commerce — an Amazon agency",
+    card: "summary_large_image",
+    title: "Virtuous Commerce | Amazon Agency",
     description:
-      "Amazon, run properly — until it's your most predictable channel.",
+      "Amazon, run properly: until it's your most predictable channel.",
   },
   robots: { index: true, follow: true },
 };
@@ -48,7 +49,24 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full antialiased">
+        {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "Virtuous Commerce",
+              url: siteUrl,
+              logo: `${siteUrl}/icon.svg`,
+              email: "hello@virtuouscommerce.com",
+              description:
+                "Virtuous Commerce is an Amazon agency: discovery, conversion, advertising, inventory, and a weekly channel P&L.",
+            }),
+          }}
+        />
+      </body>
     </html>
   );
 }

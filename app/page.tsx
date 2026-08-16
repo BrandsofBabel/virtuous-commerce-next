@@ -3,9 +3,9 @@ import "./_home/v6d.css";
 import Home from "./_home/page";
 
 export const metadata: Metadata = {
-  title: "Virtuous Commerce — an Amazon agency",
+  title: "Virtuous Commerce | Amazon Agency",
   description:
-    "Virtuous Commerce is an Amazon agency: we get your brand found, turn shoppers into buyers, keep advertising profitable and inventory lean — until Amazon is your most predictable channel.",
+    "Virtuous Commerce is an Amazon agency: we get your brand found, turn shoppers into buyers, and keep ads profitable and inventory lean. Amazon, run properly.",
 };
 
 export default function Page() {

@@ -108,7 +108,7 @@ const CARDS: CardData[] = [
   },
   {
     name: "y",
-    title: "Your Brand — Grass-Fed Whey, Vanilla, 2 lb",
+    title: "Your Brand Grass-Fed Whey, Vanilla, 2 lb",
     price: ["39", "95"],
     reviews: "1,213",
     bought: "500+ bought in past month",
@@ -405,7 +405,7 @@ function MailScene({
   return (
     <div className="mailv">
       <div className="mail-head">
-        <div className="mail-subj">Weekly recap — Week 33</div>
+        <div className="mail-subj">Weekly recap: Week 33</div>
         <div className="mail-meta">
           <span className="mail-avatar">V</span>
           <b>Virtuous Commerce</b>
@@ -612,7 +612,7 @@ function BrowserScreen({ stage, groupId }: { stage: number; groupId: string }) {
                           </div>
                           <div className="pdp-info">
                             <div className="pdp-title">
-                              Your Brand — Grass-Fed Whey Protein, Vanilla, 2 lb
+                              Your Brand Grass-Fed Whey Protein, Vanilla, 2 lb
                             </div>
                             <div className="pdp-stars">
                               <span className="star-wrap">
@@ -971,7 +971,7 @@ export default function V6Home() {
       {/* ---------- mobile: linear flow (hidden on desktop via CSS) ---------- */}
       <div className="mflow">
         <header className="m-top">
-          <h1>Virtuous Commerce</h1>
+          <p className="m-brand">Virtuous Commerce</p>
         </header>
         {FRAGMENTS.map((frag, i) => (
           <section className="m-beat" key={i}>
@@ -979,7 +979,7 @@ export default function V6Home() {
               <span className="rail-no">{String(i).padStart(2, "0")}</span>
               <span>{BEATS[i]}</span>
             </div>
-            <h2 className="m-frag">{frag}</h2>
+            <p className="m-frag">{frag}</p>
             {BULLETS[i].length > 0 ? (
               <ul className="bullets m-bullets">
                 {BULLETS[i].map((b, j) => (
@@ -1040,7 +1040,7 @@ export default function V6Home() {
                   <span className="modal-check">✓</span>
                   <h3>Got it.</h3>
                   <p>
-                    You’ll hear from us within one business day — an honest
+                    You’ll hear from us within one business day: an honest
                     read on where your channel stands, no pitch deck.
                   </p>
                   <button className="btn modal-close" onClick={() => setBooking(false)}>
@@ -1052,7 +1052,7 @@ export default function V6Home() {
                   <h3>Book a call</h3>
                   <p className="modal-sub">
                     Tell us where Amazon stands for you. Thirty minutes, an
-                    honest read — you’ll hear back within one business day.
+                    honest read. You’ll hear back within one business day.
                   </p>
                   <form onSubmit={submitBooking}>
                     <label>
